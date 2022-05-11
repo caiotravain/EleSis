@@ -17,11 +17,13 @@ entity ControlUnit is
                                                                      -- ng (se negativo) da ALU
 		muxALUI_A                   : out STD_LOGIC;                     -- mux que seleciona entre
                                                                      -- instrução  e ALU para reg. A
-		muxAM                       : out STD_LOGIC;                     -- mux que seleciona entre
+		muxAM                       : out STD_LOGIC; 
+    
+    muxS                        : out STD_LOGIC;                    -- mux que seleciona entre
                                                                      -- reg. A e Mem. RAM para ALU
                                                                      -- A  e Mem. RAM para ALU
 		zx, nx, zy, ny, f, no       : out STD_LOGIC;                     -- sinais de controle da ALU
-		loadA, loadD, loadM, loadPC : out STD_LOGIC               -- sinais de load do reg. A,
+		loadA, loadD, loadM, loadPC, LoadS : out STD_LOGIC               -- sinais de load do reg. A,
                                                                      -- reg. D, Mem. RAM e Program Counter
     );
 end entity;
@@ -33,6 +35,8 @@ loadD <= '1' when (instruction(17) and instruction(4)) = '1' else '0';
 loadA <= '1' when((not(instruction(17))) or instruction(3)) = '1' else '0';
 loadM <= '1' when (instruction(17) and instruction(5)) = '1' else '0';
 loadPC <= '1' when ((instruction(17) and instruction(1) and zr and (not(ng))) or ((instruction(0) and instruction(17) and not(ng) and not(zr)) or ((instruction(2) and instruction(17) and ng and (not(zr)))))) = '1' else '0';
+loadS <= '1' when (instruction(17) and instruction(6)) = '1' else '0';
+
 
 zx<='1' when (instruction(12) and instruction(17)) = '1' else '0';
 nx<= '1'when (instruction(11) and instruction(17)) = '1' else '0';
@@ -41,9 +45,9 @@ ny<= '1'when (instruction(9) and instruction(17)) = '1' else '0';
 f<= '1'when (instruction(8) and instruction(17)) = '1' else '0';
 no<= '1'when (instruction(7) and instruction(17)) = '1' else '0';
 
-muxALUI_A <= '1' when ((instruction(14) and instruction(17)) or (not(instruction(17)))) = '1' else '0';
+muxALUI_A <= '1' when (not(instruction(17))) = '1' else '0';
 muxAM<= '1'when (instruction(13))  = '1' else '0';
-
+muxS <= '1' when (instruction(14)) = '1' else '0';
 
 
 end architecture;

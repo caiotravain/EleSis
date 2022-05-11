@@ -71,8 +71,9 @@ architecture arch of CPU is
       zr,ng                       : in STD_LOGIC;
       muxALUI_A                   : out STD_LOGIC;
       muxAM                       : out STD_LOGIC;
+      muxS                     : out STD_LOGIC;
       zx, nx, zy, ny, f, no       : out STD_LOGIC;
-      loadA, loadD, loadM, loadPC : out STD_LOGIC
+      loadA, loadD, loadM, loadPC, LoadS : out STD_LOGIC
       );
   end component;
 
@@ -89,6 +90,8 @@ architecture arch of CPU is
   signal c_loadPC: STD_LOGIC;
   signal c_zr: std_logic := '0';
   signal c_ng: std_logic := '0';
+  signal c_loads: std_logic := '0';
+  signal c_muxS: std_logic := '0';
 
   signal s_muxALUI_Aout: STD_LOGIC_VECTOR(15 downto 0);
   signal s_muxAM_out: STD_LOGIC_VECTOR(15 downto 0);
@@ -97,6 +100,8 @@ architecture arch of CPU is
   signal s_ALUout: STD_LOGIC_VECTOR(15 downto 0);
 
   signal s_pcout: STD_LOGIC_VECTOR(15 downto 0);
+  signal s_mux_out: STD_LOGIC_VECTOR(15 downto 0);
+  signal s_regsout : STD_LOGIC_VECTOR(15 downto 0);
 
 begin
 s1: ControlUnit port map(
@@ -105,6 +110,7 @@ s1: ControlUnit port map(
       ng  => c_ng,
       muxALUI_A => c_muxALUI_A,
       muxAM  => c_muxAM,
+      muxS => c_muxS,
       zx => c_zx,
       nx => c_nx,
       zy => c_zy,
@@ -114,11 +120,12 @@ s1: ControlUnit port map(
       loadA => c_loadA,
       loadD => c_loadD,
       loadM => writeM,
-      loadPC => c_loadPC
+      loadPC => c_loadPC,
+      loadS => c_loads
 );
 
 s2: ALU port map(
-      x => s_regDout,
+      x => s_mux_out,
       y => s_muxAM_out,
       zx => c_zx,
       nx => c_nx,
@@ -144,6 +151,13 @@ muxamd: Mux16 port map(
     q=> s_muxAM_out
     );
 
+muxs: Mux16 port map(
+    a=>s_regDout,
+    b=> s_regsout,
+    sel=> c_muxs,
+    q=> s_mux_out
+    );
+
 Aregister : register16 port map(
     clock => clock,
     input=> s_muxALUI_Aout,
@@ -165,6 +179,13 @@ Pc1: pc port map(
     reset =>reset,
     input => s_regAout,
     output => s_pcout
+);
+
+Sregister : register16 port map(
+    clock => clock,
+    input=> s_ALUout,
+    load=> c_loads,
+    output=> s_regsout
 );
 
 outM<= s_ALUout;
