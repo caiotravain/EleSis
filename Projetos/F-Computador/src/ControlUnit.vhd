@@ -31,8 +31,8 @@ end entity;
 architecture arch of ControlUnit is
 begin
 
-loadD <= '1' when (instruction(17) and instruction(4)) = '1' else '0';
-loadA <= '1' when((not(instruction(17))) or instruction(3)) = '1' else '0';
+loadD <= '1' when (instruction(17) and instruction(4)) or ((not(instruction(17))) and instruction(4)) = '1' else '0';
+loadA <= '1' when (instruction(17) and instruction(3)) or ((not(instruction(17))) and instruction(3)) = '1' else '0';
 loadM <= '1' when (instruction(17) and instruction(5)) = '1' else '0';
 loadPC <= '1' when ((instruction(17) and instruction(1) and zr and (not(ng))) or ((instruction(0) and instruction(17) and not(ng) and not(zr)) or ((instruction(2) and instruction(17) and ng and (not(zr)))))) = '1' else '0';
 loadS <= '1' when (instruction(17) and instruction(6)) = '1' else '0';

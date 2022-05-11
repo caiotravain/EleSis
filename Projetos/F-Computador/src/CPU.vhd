@@ -167,7 +167,7 @@ Aregister : register16 port map(
 
 Dregister : register16 port map(
     clock => clock,
-    input=> s_ALUout,
+    input=> s_muxALUI_Aout,
     load=> c_loadD,
     output=> s_regDout
     );
@@ -183,7 +183,7 @@ Pc1: pc port map(
 
 Sregister : register16 port map(
     clock => clock,
-    input=> s_ALUout,
+    input=> s_muxALUI_Aout,
     load=> c_loads,
     output=> s_regsout
 );
