@@ -1,0 +1,8 @@
+    push argument 1
+    push const 1
+    eq
+if-goto end1
+    push argument 1
+    push const 0
+    eq
+if-goto end0

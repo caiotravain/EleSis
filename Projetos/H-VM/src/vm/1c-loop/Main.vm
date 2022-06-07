@@ -16,6 +16,18 @@
 // ----------------------------------
 
 function Main.main 0
+label LOOP_START
+push temp 0
+push constant 1
+add 
+pop temp 0
+push temp 0
+push constant 55
+lt
+if-goto LOOP_START
+push temp 0
+pop temp 3
+
 
 
 

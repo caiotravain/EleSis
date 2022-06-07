@@ -14,6 +14,21 @@
 
 function Main.main 0
 
+label LOOP_START
+push temp 0
+push temp 1
+sub
+pop temp 0
+push temp 0
+push constant 0
+lt
+if-goto end
+
+push constant 1
+push temp 3
+add 
+pop temp 3
+goto LOOP_START
    
 label end
 
